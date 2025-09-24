@@ -1,0 +1,353 @@
+{
+  "name": "True Random Number Generator n8n",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Pega os valores que chegam do JSON do n8n\nconst min = $json[\"min\"];\nconst max = $json[\"max\"];\n\nfunction validateMinMax(min, max) {\n  const minNum = Number(min);\n  const maxNum = Number(max);\n\n  if (isNaN(minNum) || isNaN(maxNum)) {\n    return { success: false, message: \"Min e Max devem ser números.\", min, max };\n  }\n\n  if (!Number.isInteger(minNum) || !Number.isInteger(maxNum)) {\n    return { success: false, message: \"Min e Max não podem ser decimais.\", min, max };\n  }\n\n  if (minNum > maxNum) {\n    return { success: false, message: \"O valor mínimo não pode ser maior que o máximo.\", min, max };\n  }\n\n  return { success: true, message: \"Valores válidos.\", min: minNum, max: maxNum };\n}\n\n// Retorno para o n8n\nreturn [\n  {\n    json: validateMinMax(min, max),\n  },\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        304,
+        0
+      ],
+      "id": "993304ef-d7f1-42cb-b3ab-328eddc76543",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "formTitle": "True Random Number Generator",
+        "formDescription": "Digite um numero min (mínimo) e um número max (máximo) e obtenha um número aleatório",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Min",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Max",
+              "fieldType": "number",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "customCss": ":root {\n\t--font-family: 'Open Sans', sans-serif;\n\t--font-weight-normal: 400;\n\t--font-weight-bold: 600;\n\t--font-size-body: 12px;\n\t--font-size-label: 14px;\n\t--font-size-test-notice: 12px;\n\t--font-size-input: 14px;\n\t--font-size-header: 20px;\n\t--font-size-paragraph: 14px;\n\t--font-size-link: 12px;\n\t--font-size-error: 12px;\n\t--font-size-html-h1: 28px;\n\t--font-size-html-h2: 20px;\n\t--font-size-html-h3: 16px;\n\t--font-size-html-h4: 14px;\n\t--font-size-html-h5: 12px;\n\t--font-size-html-h6: 10px;\n\t--font-size-subheader: 14px;\n\n\t/* Colors */\n\t--color-background: #FFFFFF;\n\t--color-test-notice-text: #e6a23d;\n\t--color-test-notice-bg: #fefaf6;\n\t--color-test-notice-border: #89CFF0;\n\t--color-card-bg: #6495ED;\n\t--color-card-border:#6495ED;\n\t--color-card-shadow: rgba(99, 77, 255, 0.06);\n\t--color-link: #7e8186;\n\t--color-header: #FFFFFF;\n\t--color-label: #555555;\n\t--color-input-border: #dbdfe7;\n\t--color-input-text: #000000 ;\n\t--color-focus-border: rgb(90, 76, 194);\n\t--color-submit-btn-bg: #ff6d5a;\n\t--color-submit-btn-text: #ffffff;\n\t--color-error: #ea1f30;\n\t--color-required: #ff6d5a;\n\t--color-clear-button-bg: #7e8186;\n\t--color-html-text: #555;\n\t--color-html-link: #ff6d5a;\n\t--color-header-subtext: #6495ED;\n\n\t/* Border Radii */\n\t--border-radius-card: 8px;\n\t--border-radius-input: 6px;\n\t--border-radius-clear-btn: 50%;\n\t--card-border-radius: 8px;\n\n\t/* Spacing */\n\t--padding-container-top: 24px;\n\t--padding-card: 24px;\n\t--padding-test-notice-vertical: 12px;\n\t--padding-test-notice-horizontal: 24px;\n\t--margin-bottom-card: 16px;\n\t--padding-form-input: 12px;\n\t--card-padding: 24px;\n\t--card-margin-bottom: 16px;\n\n\t/* Dimensions */\n\t--container-width: 448px;\n\t--submit-btn-height: 48px;\n\t--checkbox-size: 18px;\n\n\t/* Others */\n\t--box-shadow-card: 0px 4px 16px 0px var(--color-card-shadow);\n\t--opacity-placeholder: 0.5;\n}"
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "31df2689-e164-4dbc-bd69-c171fb011b94",
+      "name": "On form submission",
+      "webhookId": "cbe8051d-a18f-441d-8553-bb1c50fbea23"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "99ca73a9-d3de-4717-866b-5a12667481b5",
+              "name": "Min",
+              "value": "={{ $json.Min }}",
+              "type": "number"
+            },
+            {
+              "id": "fdfb2e70-b98f-4498-ba9f-628756c62276",
+              "name": "Max",
+              "value": "={{ $json.Max }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        128,
+        0
+      ],
+      "id": "07929b93-7759-465a-8e48-ad633195e8e9",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "96b9d0b7-8061-4dd6-8c3f-25839a1c556b",
+              "name": "message",
+              "value": "={{ $json.message }}",
+              "type": "string"
+            },
+            {
+              "id": "c0674adc-32ce-4c32-940c-f72aea23a446",
+              "name": "success",
+              "value": "={{ $json.success }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        160
+      ],
+      "id": "9dda6501-f2a3-4b99-a906-a7cbb079344a",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3eaae883-2d80-4357-b82d-19ab18ce24bf",
+              "name": "Min",
+              "value": "={{ $('On form submission').item.json.Min }}",
+              "type": "number"
+            },
+            {
+              "id": "0f81eaf4-2c23-4b20-bd4a-140768bf2601",
+              "name": "Max",
+              "value": "={{ $('On form submission').item.json.Max }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        640,
+        -192
+      ],
+      "id": "db44bf80-e3a8-42b5-9d8f-647c61a09e86",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "Seu número aleatório é :",
+        "completionMessage": "={{ $json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        1008,
+        -192
+      ],
+      "id": "ceae1ccf-29b9-4576-af25-9fc0e8115660",
+      "name": "Form",
+      "webhookId": "973179b4-dfc8-4930-9129-b8d7ab0cb229"
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "True Random Number Generator",
+        "completionMessage": "Números Inválidos Digite novamente",
+        "limitWaitTime": "={{ $json.message }}",
+        "options": {
+          "formTitle": ""
+        }
+      },
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        816,
+        160
+      ],
+      "id": "221113e9-5f34-4733-b295-0ae690f9e2b3",
+      "name": "Form1",
+      "webhookId": "b4ddb741-4bb1-4bc0-9f95-bf2fee2b7326"
+    },
+    {
+      "parameters": {
+        "url": "https://www.random.org/integers/",
+        "responseFormat": "string",
+        "options": {},
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "num",
+              "value": "={{ $json[\"num\"] || 1 }}"
+            },
+            {
+              "name": "min",
+              "value": "={{ $('On form submission').item.json.Min }}"
+            },
+            {
+              "name": "max",
+              "value": "={{ $('On form submission').item.json.Max }}"
+            },
+            {
+              "name": "col",
+              "value": "1"
+            },
+            {
+              "name": "base",
+              "value": "10"
+            },
+            {
+              "name": "format",
+              "value": "plain"
+            },
+            {
+              "name": "rnd",
+              "value": "new"
+            }
+          ]
+        }
+      },
+      "id": "fbf54820-bfce-4eb3-87c4-84fd2aa1c256",
+      "name": "Get Integers",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        832,
+        -192
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "35681228-2956-42db-b576-c6db9daa3197",
+              "leftValue": "={{ $('On form submission').item.json.Min }}",
+              "rightValue": "={{ $('On form submission').item.json.Max }}",
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        480,
+        0
+      ],
+      "id": "f1b67283-0365-4a58-8fb1-234960ba4894",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Form1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Get Integers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Integers": {
+      "main": [
+        [
+          {
+            "node": "Form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1623c363-8184-4777-92a2-c49aa9b93786",
+  "meta": {
+    "instanceId": "241cbcf84f641924d9a06c8213358cac98bdaf3e1a9885700aed61fa5386e271"
+  },
+  "id": "PHLqpkOxm2N83Zhq",
+  "tags": []
+}
