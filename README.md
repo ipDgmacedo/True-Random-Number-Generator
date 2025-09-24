@@ -64,13 +64,13 @@ Instalação do n8n com Docker
 O **n8n** pode ser facilmente instalado e executado usando o Docker.  
 Aqui está um guia passo a passo:
 
-# 1. Instalar o Docker
+1. Instalar o Docker
 
 - Acesse: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)  
 - Baixe e instale o **Docker Desktop** (Windows, macOS ou Linux).  
 - Após instalar, abra o Docker Desktop e certifique-se de que ele está rodando (ícone ativo na barra de tarefas).
   
-# 2. Baixar e rodar o n8n com Docker
+2. Baixar e rodar o n8n com Docker
 🔹 Opção A — Usando o Docker Desktop (interface gráfica, sem terminal)
 
 1. Abra o **Docker Desktop**.  
