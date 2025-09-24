@@ -5,7 +5,6 @@ Este projeto é um **workflow para o n8n** que gera números aleatórios a parti
 # 🚀 Como funciona:
 
 1. O usuário envia uma mensagem no chat, como:
-   ```text
    Olá, quero um número entre 1 e 100
    
 2. O workflow identifica os números informados (min e max).
@@ -34,7 +33,24 @@ flowchart LR
 -n8n instalado e rodando (via Docker ou localmente).
 -Node.js v22 (LTS) ou superior.
 -Conexão com a internet (necessária para acessar o Random.org).
+-Conta e chave de API do Random.org (gratuita ou paga)
 
+# 🔧 Configuração do Ambiente
+
+Para utilizar a API do Random.org:
+1. Obtenha sua chave de API em: https://api.random.org/api-keys
+2. Configure as credenciais no n8n:
+   -Vá em Credentials > API Key
+   -Insira sua chave do Random.org
+3. Opcional: usar variável de ambiente:
+   
+   Linux/macOS:
+   export RANDOM_ORG_API_KEY="sua_chave"
+
+   Windows PowerShell:
+   setx RANDOM_ORG_API_KEY "sua_chave"
+
+   
 # 📥 Importando o Workflow
 1. Baixe o arquivo [True Random number Generator (n8n).json](./True%20Random%20number%20Generator%20(n8n).json)
 2. No painel do n8n:
@@ -94,7 +110,13 @@ docker run -it --rm `
 Depois, abra no navegador:
 👉 http://localhost:5678
 
-Acesse a interface, vá em Workflows > Import from File e carregue o JSON deste repositório.
+# ✅ Testando o Workflow
+
+1. Importe e ative o workflow no n8n
+2. Envie mensagens de teste:
+   -"Quero um número de 1 a 10"
+   -"Até 50"
+3. Verifique se o número retornado está dentro do intervalo informado
 
 #💡 Exemplos de uso
 -Entrada:
