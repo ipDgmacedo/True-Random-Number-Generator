@@ -1,54 +1,79 @@
 # 🎲 True Random Number Generator (n8n Workflow)
 
-Este projeto é um **workflow para o n8n** que gera números aleatórios a partir de uma entrada do usuário, utilizando tanto **Math.random()** quanto a API do [Random.org](https://www.random.org/).
-
+Este projeto é um workflow para o n8n que gera números aleatórios a partir de uma entrada do usuário via formulário, utilizando a API do Random.org
+ para garantir maior entropia.
+ 
 # 🚀 Como funciona:
 
-1. O usuário envia uma mensagem no chat, como:
-   Olá, quero um número entre 1 e 100
-   
-2. O workflow identifica os números informados (min e max).
-3. Caso apenas um número seja informado, assume-se min = 1.
-4. O fluxo gera um número aleatório entre o intervalo definido:
-   -Primeiro usando JavaScript (Math.random).
-   -Depois consumindo a API do Random.org para garantir maior entropia.
-5. O número sorteado é retornado ao usuário.
+1. O usuário acessa o formulário e digita um valor mínimo (Min) e um valor máximo (Max).
+2. O workflow valida os valores informados:
+-Ambos precisam ser números inteiros.
+-O valor mínimo não pode ser maior que o máximo.
+3. Caso os valores sejam inválidos, o usuário recebe uma mensagem de erro.
+4. Se forem válidos:
+-O workflow consulta a API do Random.org para gerar um número inteiro aleatório dentro do intervalo informado.
+5. O número sorteado é retornado ao usuário diretamente no formulário de resposta.
 
 # 📂 Estrutura do Workflow
-- When chat message received → Gatilho de mensagem do chat.
-- Edit Fields → Extrai e organiza o input do usuário.
-- Code in JavaScript → Processa os números informados e sorteia um valor.
-- Edit Fields1 → Prepara os parâmetros para a requisição externa.
-- Get Integers → Faz a chamada à API do Random.org para gerar o número final.
+1. On form submission → Gatilho de formulário no n8n.
+2. Edit Fields → Extrai e organiza os campos Min e Max.
+3. Code in JavaScript → Valida se os números informados são corretos.
+4. If → Decide o caminho:
+   -✅ Se válido → gera o número com a API.
+   -❌ Se inválido → retorna mensagem de erro.
+5. Edit Fields2 → Get Integers → Form → Faz a chamada ao Random.org e retorna o número aleatório.
+6. Edit Fields1 → Form1 → Exibe mensagem de erro caso a entrada seja inválida.
 
 # 🖼️ Diagrama do Fluxo (Mermaid.js)
 flowchart LR
-    A[💬 When chat message received] --> B[✏️ Edit Fields]
+    A[📝 On form submission] --> B[✏️ Edit Fields]
     B --> C[🖥️ Code in JavaScript]
-    C --> D[✏️ Edit Fields1]
-    D --> E[🌐 Get Integers (Random.org API)]
-    E --> F[🎲 Número Aleatório Retornado]
+    C --> D{❓ If válido?}
+    D -- Sim --> E[✏️ Edit Fields2]
+    E --> F[🌐 Get Integers (Random.org API)]
+    F --> G[🎲 Form (Número Aleatório)]
+    D -- Não --> H[✏️ Edit Fields1]
+    H --> I[⚠️ Form1 (Erro)]
+
 
 # 🛠️ Pré-requisitos
 -n8n instalado e rodando (via Docker ou localmente).
 -Node.js v22 (LTS) ou superior.
 -Conexão com a internet (necessária para acessar o Random.org).
--Conta e chave de API do Random.org (gratuita ou paga)
+Diferente de outros workflows, este não exige chave de API, pois usa a versão pública do Random.org.
 
 # 🔧 Configuração do Ambiente
 
-Para utilizar a API do Random.org:
-1. Obtenha sua chave de API em: https://api.random.org/api-keys
-2. Configure as credenciais no n8n:
-   -Vá em Credentials > API Key
-   -Insira sua chave do Random.org
-3. Opcional: usar variável de ambiente:
-   
-   Linux/macOS:
-   export RANDOM_ORG_API_KEY="sua_chave"
+Embora o workflow funcione sem nenhuma configuração extra, você pode definir variáveis de ambiente para deixar o uso mais flexível:
+# Exemplos de variáveis
+MIN_DEFAULT → Valor mínimo padrão (caso o usuário não informe).
+MAX_DEFAULT → Valor máximo padrão (caso o usuário não informe).
+RANDOM_API_URL → URL base da API (pode ser alterada se quiser usar outro serviço).
 
-   Windows PowerShell:
-   setx RANDOM_ORG_API_KEY "sua_chave"
+Como definir
+Linux / macOS
+export MIN_DEFAULT=1
+export MAX_DEFAULT=100
+export RANDOM_API_URL="https://www.random.org/integers/"
+
+Windows (PowerShell)
+setx MIN_DEFAULT "1"
+setx MAX_DEFAULT "100"
+setx RANDOM_API_URL "https://www.random.org/integers/"
+
+
+No Docker, você pode passar variáveis diretamente ao rodar o container:
+
+docker run -it --rm \
+  -p 5678:5678 \
+  -v ~/.n8n:/home/node/.n8n \
+  -e MIN_DEFAULT=1 \
+  -e MAX_DEFAULT=100 \
+  -e RANDOM_API_URL="https://www.random.org/integers/" \
+  n8nio/n8n
+
+
+Dentro do n8n, basta usar {{$env.MIN_DEFAULT}} ou {{$env.MAX_DEFAULT}} para acessar as variáveis.
 
    
 # 📥 Importando o Workflow
@@ -112,26 +137,23 @@ Depois, abra no navegador:
 
 # ✅ Testando o Workflow
 
-1. Importe e ative o workflow no n8n
-2. Envie mensagens de teste:
-   -"Quero um número de 1 a 10"
-   -"Até 50"
-3. Verifique se o número retornado está dentro do intervalo informado
+1. Acesse o formulário gerado pelo n8n.
+2. Informe os valores de Min e Max.
+3. Clique em enviar:
+
+Se válido → retorna um número aleatório dentro do intervalo.
+
+Se inválido → exibe mensagem de erro explicando o problema.
 
 #💡 Exemplos de uso
--Entrada:
- Ex: 1 a 10
+Entrada: Min = 1, Max = 10
+Saída possível: 7
 
--Saída possível:
-(Número aleatório)Ex: 7
+Entrada: Min = 50, Max = 60
+Saída possível: 53
 
--Entrada:
- Ex: até 50 
-
--Saída possível:
-(Número aleatório)Ex: 23
-
-(Embora existam outras formas de fazer isso, como formulários ou ferramentas no-code, este workflow mostra uma abordagem prática e automatizada dentro do n8n.)
+Entrada inválida: Min = 100, Max = 10
+Saída: "O valor mínimo não pode ser maior que o máximo."
 
 📜 Licença
 
